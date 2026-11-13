@@ -1,7 +1,7 @@
-import java.time.LocalDate;
+package backend;
 
 public class Payment {
-    private String payid;
+    protected String payid;
     private int payamount;
     private String paymode;
     private String paystatus;
