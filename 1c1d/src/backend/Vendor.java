@@ -1,7 +1,7 @@
 package backend;
 
 public class Vendor {
-    private int vendid;
+    private String vendid;
     private String vendestabname;
     private String vendownername;
     private String vendaddress;
@@ -10,7 +10,7 @@ public class Vendor {
 
     public Vendor(){}
 
-    public Vendor(int vendid, String vendestabname, String vendownername, String vendaddress, int vendcpnum, String vendemail) {
+    public Vendor(String vendid, String vendestabname, String vendownername, String vendaddress, int vendcpnum, String vendemail) {
         this.vendid = vendid;
         this.vendestabname = vendestabname;
         this.vendownername = vendownername;
@@ -19,11 +19,11 @@ public class Vendor {
         this.vendemail = vendemail;
     }
 
-    public int getVendid() {
+    public String getVendid() {
         return vendid;
     }
 
-    public void setVendid(int vendid) {
+    public void setVendid(String vendid) {
         this.vendid = vendid;
     }
 

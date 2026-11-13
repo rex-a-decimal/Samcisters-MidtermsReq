@@ -1,7 +1,7 @@
 package backend;
 
 public class Tourist {
-    private int tourid;
+    private String tourid;
     private String tourname;
     private String touraddress;
     private int tourcpnum;
@@ -12,7 +12,7 @@ public class Tourist {
 
     public Tourist(){}
 
-    public Tourist(int tourid, String tourname, String touraddress, int tourcpnum, String touremail, String touruser, String tourpass, String tourloyalty) {
+    public Tourist(String tourid, String tourname, String touraddress, int tourcpnum, String touremail, String touruser, String tourpass, String tourloyalty) {
         this.tourid = tourid;
         this.tourname = tourname;
         this.touraddress = touraddress;
@@ -23,11 +23,11 @@ public class Tourist {
         this.tourloyalty = tourloyalty;
     }
 
-    public int getTourid() {
+    public String getTourid() {
         return tourid;
     }
 
-    public void setTourid(int tourid) {
+    public void setTourid(String tourid) {
         this.tourid = tourid;
     }
 
