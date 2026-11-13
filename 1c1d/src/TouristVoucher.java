@@ -1,5 +1,3 @@
-package backend;
-
 public class TouristVoucher {
     private int tourid;
     private String voucherid;

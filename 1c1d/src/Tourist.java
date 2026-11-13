@@ -1,5 +1,3 @@
-package backend;
-
 public class Tourist {
     private String tourid;
     private String tourname;

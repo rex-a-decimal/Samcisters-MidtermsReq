@@ -1,5 +1,3 @@
-package backend;
-
 public class Voucher {
     private int voucherid;
     private String voucherdesc;

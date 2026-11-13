@@ -1,5 +1,3 @@
-package backend;
-
 public class SalesDetails {
     private String salesid;
     private String prodid;

@@ -1,5 +1,3 @@
-package backend;
-
 public class Admin {
     private String adminid;
     private String adminname;

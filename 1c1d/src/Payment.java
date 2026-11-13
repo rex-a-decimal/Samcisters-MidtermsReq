@@ -1,5 +1,3 @@
-package backend;
-
 public class Payment {
     private String payid;
     private double payamount;

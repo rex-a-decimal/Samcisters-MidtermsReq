@@ -1,5 +1,3 @@
-package backend;
-
 public class Vendor {
     private String vendid;
     private String vendestabname;
