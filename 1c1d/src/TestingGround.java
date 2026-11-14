@@ -63,9 +63,10 @@ public class TestingGround {
         while (inTouristMenu) {
             System.out.println(BOLD + "TOURIST DASHBOARD" + RESET);
             System.out.println(UNDERLINE + "[1]" + RESET + " Browse Products");
-            System.out.println(UNDERLINE + "[2]" + RESET + " View My Order History");
+            System.out.println(UNDERLINE + "[2]" + RESET + " Place an Order");
             System.out.println(UNDERLINE + "[3]" + RESET + " Cancel an Order");
-            System.out.println(UNDERLINE + "[4]" + RESET + " Log Out");
+            System.out.println(UNDERLINE + "[4]" + RESET + " View My Order History");
+            System.out.println(UNDERLINE + "[5]" + RESET + " Log Out");
             System.out.print(YELLOW + "Select an option: " + RESET);
 
             String choice = scan.nextLine();
@@ -75,12 +76,15 @@ public class TestingGround {
                     System.out.println(BLUE + "Opening product catalog..." + RESET);
                     break;
                 case "2":
-                    System.out.println(BLUE + "Loading your order history..." + RESET);
+                    System.out.println(BLUE + "What would you like to order?" + RESET);
                     break;
                 case "3":
                     System.out.println(BLUE + "Opening cancellation menu..." + RESET);
                     break;
                 case "4":
+                    System.out.println(BLUE + "Loading your order history..." + RESET);
+                    break;
+                case "5":
                     System.out.println(YELLOW + "Logging out..." + RESET);
                     inTouristMenu = false;
                     break;
