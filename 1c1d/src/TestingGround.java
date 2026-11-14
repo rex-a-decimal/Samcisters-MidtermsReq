@@ -36,7 +36,7 @@ public class TestingGround {
                 }
 
                 case 4 -> {
-                    System.out.println(BOLD + "Thank you for using CARRS!");
+                    System.out.print(BOLD + ITALIC + "Thank you for using CARRS!");
                     System.exit(0);
                 }
             }
