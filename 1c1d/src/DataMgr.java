@@ -1,8 +1,10 @@
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DataMgr {
     private static Connection con;
-    private static final String URL = "jdbc:mysql://localhost:3306/teamsamcisters";
+    private static final String URL = "jdbc:mysql://localhost:3306/reworkedsamcisters_final_1c";
     private static final String USER = "root";
     private static final String PASS = "";
 

@@ -1,14 +1,15 @@
 public class Admin {
     private String adminid;
     private String adminname;
-    private int admincpnum;
+    private String admincpnum;
     private String adminemail;
     private String adminuser;
     private String adminpass;
 
     public Admin() {}
 
-    public Admin(String adminid, String adminname, int admincpnum, String adminemail, String adminuser, String adminpass) {
+    public Admin(String adminid, String adminname, String admincpnum,
+                 String adminemail, String adminuser, String adminpass) {
         this.adminid = adminid;
         this.adminname = adminname;
         this.admincpnum = admincpnum;
@@ -33,11 +34,11 @@ public class Admin {
         this.adminname = adminname;
     }
 
-    public int getAdmincpnum() {
+    public String getAdmincpnum() {
         return admincpnum;
     }
 
-    public void setAdmincpnum(int admincpnum) {
+    public void setAdmincpnum(String admincpnum) {
         this.admincpnum = admincpnum;
     }
 

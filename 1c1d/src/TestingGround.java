@@ -84,25 +84,28 @@ public class TestingGround {
             } else {
                 System.out.println("Incorrect credentials.");
             }
-        } else {
+        } else if (ch.equals("2")) {
             System.out.print("Name: ");
             String name = scan.nextLine();
             System.out.print("Address: ");
             String addr = scan.nextLine();
             System.out.print("Phone: ");
-            int phone = Integer.parseInt(scan.nextLine());
+            String phone = scan.nextLine();
             System.out.print("Email: ");
             String email = scan.nextLine();
             System.out.print("Username: ");
             String user = scan.nextLine();
             System.out.print("Password: ");
             String pass = scan.nextLine();
+
             Tourist t = DataAccess.signUpTourist(name, addr, phone, email, user, pass);
             if (t != null) {
                 currentTourID = t.getTourid();
                 currentTourName = t.getTourname();
                 System.out.println("Registered! Welcome " + user);
             }
+        } else {
+            System.out.println("Invalid choice.");
         }
     }
 
@@ -231,13 +234,19 @@ public class TestingGround {
                     }
                 }
                 case "2" -> {
-                    if (currentVendID == null) { System.out.println("Login first."); break; }
+                    if (currentVendID == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     for (Product p : DataAccess.getProductsByVendor(currentVendID)) {
                         System.out.println(p.getProdid() + " | " + p.getProdname() + " | P" + p.getProdprice() + " | " + p.getProdstatus());
                     }
                 }
                 case "3" -> {
-                    if (currentVendID == null) { System.out.println("Login first."); break; }
+                    if (currentVendID == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     System.out.print("Product ID: ");
                     String id = scan.nextLine();
                     System.out.print("Name: ");
@@ -254,7 +263,10 @@ public class TestingGround {
                     if (DataAccess.addProduct(p)) System.out.println("Product added!");
                 }
                 case "4" -> {
-                    if (currentVendID == null) { System.out.println("Login first."); break; }
+                    if (currentVendID == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     System.out.print("Product ID: ");
                     String id = scan.nextLine();
                     Product old = DataAccess.getProductById(id);
@@ -275,7 +287,10 @@ public class TestingGround {
                     if (DataAccess.updateProduct(p)) System.out.println("Updated!");
                 }
                 case "5" -> {
-                    if (currentVendID == null) { System.out.println("Login first."); break; }
+                    if (currentVendID == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     System.out.print("Product ID to delete: ");
                     String id = scan.nextLine();
                     Product old = DataAccess.getProductById(id);
@@ -324,19 +339,28 @@ public class TestingGround {
                     }
                 }
                 case "2" -> {
-                    if (currentAdmin == null) { System.out.println("Login first."); break; }
+                    if (currentAdmin == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     for (Tourist t : DataAccess.getAllTourists()) {
                         System.out.println(t.getTourid() + " | " + t.getTourname() + " | " + t.getTouruser());
                     }
                 }
                 case "3" -> {
-                    if (currentAdmin == null) { System.out.println("Login first."); break; }
+                    if (currentAdmin == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     for (Vendor v : DataAccess.getAllVendors()) {
                         System.out.println(v.getVendid() + " | " + v.getVendestabname() + " | " + v.getVendstatus());
                     }
                 }
                 case "4" -> {
-                    if (currentAdmin == null) { System.out.println("Login first."); break; }
+                    if (currentAdmin == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     System.out.print("Vendor ID: ");
                     String id = scan.nextLine();
                     System.out.print("New status: ");
@@ -344,13 +368,19 @@ public class TestingGround {
                     if (DataAccess.updateVendorStatus(id, st)) System.out.println("Status updated.");
                 }
                 case "5" -> {
-                    if (currentAdmin == null) { System.out.println("Login first."); break; }
+                    if (currentAdmin == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     for (Product p : DataAccess.getProducts()) {
                         System.out.println(p.getProdid() + " | " + p.getProdname() + " | " + p.getProdstatus());
                     }
                 }
                 case "6" -> {
-                    if (currentAdmin == null) { System.out.println("Login first."); break; }
+                    if (currentAdmin == null) {
+                        System.out.println("Login first.");
+                        break;
+                    }
                     System.out.println("[1] Delete Tourist");
                     System.out.println("[2] Delete Vendor");
                     System.out.print("Select: ");
@@ -365,7 +395,6 @@ public class TestingGround {
                             } else {
                                 System.out.println("Failed to delete tourist.");
                             }
-
                         }
                         case "2" -> {
                             System.out.print("Enter Vendor ID to delete: ");
@@ -376,6 +405,7 @@ public class TestingGround {
                                 System.out.println("Failed to delete vendor.");
                             }
                         }
+                        default -> System.out.println("Invalid choice.");
                     }
                 }
                 case "7" -> {
