@@ -2,15 +2,15 @@ public class Tourist {
     private String tourid;
     private String tourname;
     private String touraddress;
-    private int tourcpnum;
+    private String tourcpnum;
     private String touremail;
     private String touruser;
     private String tourpass;
     private String tourloyalty;
 
-    public Tourist(){}
+    public Tourist(String tourid, String tourname, String touraddress, int tourcpnum, String touremail, String touruser, String tourpass, String tourloyalty){}
 
-    public Tourist(String tourid, String tourname, String touraddress, int tourcpnum, String touremail, String touruser, String tourpass, String tourloyalty) {
+    public Tourist(String tourid, String tourname, String touraddress, String tourcpnum, String touremail, String touruser, String tourpass, String tourloyalty) {
         this.tourid = tourid;
         this.tourname = tourname;
         this.touraddress = touraddress;
@@ -45,11 +45,11 @@ public class Tourist {
         this.touraddress = touraddress;
     }
 
-    public int getTourcpnum() {
+    public String getTourcpnum() {
         return tourcpnum;
     }
 
-    public void setTourcpnum(int tourcpnum) {
+    public void setTourcpnum(String tourcpnum) {
         this.tourcpnum = tourcpnum;
     }
 

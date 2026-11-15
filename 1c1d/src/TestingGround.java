@@ -90,7 +90,7 @@ public class TestingGround {
             System.out.print("Address: ");
             String addr = scan.nextLine();
             System.out.print("Phone: ");
-            int phone = Integer.parseInt(scan.nextLine());
+            String phone = scan.nextLine();
             System.out.print("Email: ");
             String email = scan.nextLine();
             System.out.print("Username: ");

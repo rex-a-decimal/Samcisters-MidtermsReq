@@ -59,7 +59,7 @@ public class DataAccess {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Tourist(rs.getString("tourid"), rs.getString("tourname"), rs.getString("touraddress"),
-                        rs.getInt("tourcpnum"), rs.getString("touremail"), rs.getString("touruser"),
+                        rs.getString("tourcpnum"), rs.getString("touremail"), rs.getString("touruser"),
                         rs.getString("tourpass"), rs.getString("tourloyalty"));
             }
         } catch (SQLException e) {
@@ -68,7 +68,7 @@ public class DataAccess {
         return null;
     }
 
-    public static Tourist signUpTourist(String name, String address, int cp, String email, String user, String pass) {
+    public static Tourist signUpTourist(String name, String address, String cp, String email, String user, String pass) {
         String newId = "11000";
         try (Connection con = DataMgr.getCon(); Statement st = con.createStatement();
              ResultSet rs = st.executeQuery("SELECT tourid FROM tourist ORDER BY tourid DESC LIMIT 1")) {
@@ -80,7 +80,7 @@ public class DataAccess {
             ps.setString(1, newId);
             ps.setString(2, name);
             ps.setString(3, address);
-            ps.setInt(4, cp);
+            ps.setString(4, cp);
             ps.setString(5, email);
             ps.setString(6, user);
             ps.setString(7, pass);
@@ -100,7 +100,7 @@ public class DataAccess {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new Vendor(rs.getString("vendid"), rs.getString("vendestabname"), rs.getString("vendownername"),
-                        rs.getString("vendaddress"), rs.getInt("vendcpnum"), rs.getString("vendemail"),
+                        rs.getString("vendaddress"), rs.getString("vendcpnum"), rs.getString("vendemail"),
                         rs.getString("vendstatus"), rs.getString("vendpass"), rs.getString("venduser"));
             }
         } catch (SQLException e) {
@@ -116,7 +116,7 @@ public class DataAccess {
             ps.setString(2, pass);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Admin(rs.getString("adminid"), rs.getString("adminname"), rs.getInt("admincpnum"),
+                return new Admin(rs.getString("adminid"), rs.getString("adminname"), rs.getString("admincpnum"),
                         rs.getString("adminemail"), rs.getString("adminuser"), rs.getString("adminpass"));
             }
         } catch (SQLException e) {
@@ -334,7 +334,7 @@ public class DataAccess {
         try (Connection con = DataMgr.getCon(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM tourist")) {
             while (rs.next()) {
                 list.add(new Tourist(rs.getString("tourid"), rs.getString("tourname"), rs.getString("touraddress"),
-                        rs.getInt("tourcpnum"), rs.getString("touremail"), rs.getString("touruser"),
+                        rs.getString("tourcpnum"), rs.getString("touremail"), rs.getString("touruser"),
                         rs.getString("tourpass"), rs.getString("tourloyalty")));
             }
         } catch (SQLException e) {
@@ -348,7 +348,7 @@ public class DataAccess {
         try (Connection con = DataMgr.getCon(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM vendor")) {
             while (rs.next()) {
                 list.add(new Vendor(rs.getString("vendid"), rs.getString("vendestabname"), rs.getString("vendownername"),
-                        rs.getString("vendaddress"), rs.getInt("vendcpnum"), rs.getString("vendemail"),
+                        rs.getString("vendaddress"), rs.getString("vendcpnum"), rs.getString("vendemail"),
                         rs.getString("vendstatus"), rs.getString("vendpass"), rs.getString("venduser")));
             }
         } catch (SQLException e) {
