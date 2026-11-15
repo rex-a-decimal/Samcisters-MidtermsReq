@@ -308,4 +308,22 @@ public class DataAccess {
             return false;
         }
     }
+    public static boolean deleteTourist(String tourid) {
+        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement("DELETE FROM tourist WHERE tourid=?")) {
+            ps.setString(1, tourid);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Delete tourist failed.");
+            return false;
+        }
+    }
+    public static boolean deleteVendor(String tourid) {
+        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement("DELETE FROM vendor WHERE tourid=?")) {
+            ps.setString(1, tourid);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Delete vendor failed.");
+            return false;
+        }
+    }
 }
