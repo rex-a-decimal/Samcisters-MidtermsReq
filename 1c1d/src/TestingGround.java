@@ -246,107 +246,357 @@ public class TestingGround {
     }
 
     // ==================== VENDOR ====================
-    static void vendorMenu() {
-        while (true) {
-            System.out.println("\nVENDOR DASHBOARD");
-            System.out.println("[1] Log In");
-            System.out.println("[2] View My Products");
-            System.out.println("[3] Add Product");
-            System.out.println("[4] Update Product");
-            System.out.println("[5] Delete Product");
-            System.out.println("[6] Log Out");
-            System.out.print("Select: ");
-            String ch = scan.nextLine();
+    static String currentStoreName = "";
 
-            switch (ch) {
-                case "1" -> {
-                    System.out.print("Username: ");
-                    String u = scan.nextLine();
-                    System.out.print("Password: ");
-                    String p = scan.nextLine();
-                    Vendor v = DataAccess.loginVendor(u, p);
-                    if (v != null) {
-                        currentVendID = v.getVendid();
-                        System.out.println("Welcome " + v.getVendestabname() + "!");
-                    } else {
-                        System.out.println("Wrong credentials.");
-                    }
-                }
-                case "2" -> {
-                    if (currentVendID == null) {
-                        System.out.println("Login first.");
-                        break;
-                    }
-                    for (Product p : DataAccess.getProductsByVendor(currentVendID)) {
-                        System.out.println(p.getProdid() + " | " + p.getProdname() + " | P" + p.getProdprice() + " | " + p.getProdstatus());
-                    }
-                }
-                case "3" -> {
-                    if (currentVendID == null) {
-                        System.out.println("Login first.");
-                        break;
-                    }
-                    System.out.print("Product ID: ");
-                    String id = scan.nextLine();
-                    System.out.print("Name: ");
-                    String name = scan.nextLine();
-                    System.out.print("Description: ");
-                    String desc = scan.nextLine();
-                    System.out.print("Price: ");
-                    int price = Integer.parseInt(scan.nextLine());
-                    System.out.print("Status: ");
-                    String status = scan.nextLine();
-                    System.out.print("Category: ");
-                    String cat = scan.nextLine();
-                    Product p = new Product(id, currentVendID, name, desc, price, status, cat, null);
-                    if (DataAccess.addProduct(p)) System.out.println("Product added!");
-                }
-                case "4" -> {
-                    if (currentVendID == null) {
-                        System.out.println("Login first.");
-                        break;
-                    }
-                    System.out.print("Product ID: ");
-                    String id = scan.nextLine();
-                    Product old = DataAccess.getProductById(id);
-                    if (old == null || !old.getVendid().equals(currentVendID)) {
-                        System.out.println("Not found or not yours.");
-                        break;
-                    }
-                    System.out.print("New name: ");
-                    String name = scan.nextLine();
-                    if (name.isEmpty()) name = old.getProdname();
-                    System.out.print("New price: ");
-                    String pr = scan.nextLine();
-                    int price = pr.isEmpty() ? old.getProdprice() : Integer.parseInt(pr);
-                    System.out.print("New status: ");
-                    String status = scan.nextLine();
-                    if (status.isEmpty()) status = old.getProdstatus();
-                    Product p = new Product(id, currentVendID, name, old.getProddesc(), price, status, old.getProdcategory(), old.getProdimg());
-                    if (DataAccess.updateProduct(p)) System.out.println("Updated!");
-                }
-                case "5" -> {
-                    if (currentVendID == null) {
-                        System.out.println("Login first.");
-                        break;
-                    }
-                    System.out.print("Product ID to delete: ");
-                    String id = scan.nextLine();
-                    Product old = DataAccess.getProductById(id);
-                    if (old == null || !old.getVendid().equals(currentVendID)) {
-                        System.out.println("Not found or not yours.");
-                        break;
-                    }
-                    if (DataAccess.deleteProduct(id)) System.out.println("Deleted.");
-                }
-                case "6" -> {
+    static void vendorMenu() {
+        if (!vendorLogin()) {
+            return; // Return to main menu if login fails
+        }
+
+        int choice = 0;
+        do {
+            clearScreen();
+            printLine();
+            System.out.println("STORE: " + currentStoreName + " | VENDOR ID: " + currentVendID);
+            System.out.println("Product Management Dashboard");
+            printLine();
+            displayVendorProducts();
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------");
+            System.out.println("OPERATIONS MENU:");
+            System.out.println("[1] Add Product");
+            System.out.println("[2] Archive Product");
+            System.out.println("[3] View & Search Sales");
+            System.out.println("[4] Update Product Details");
+            System.out.println("[5] Change Product Status");
+            System.out.println("[6] Logout");
+            printLine();
+            System.out.print("Select option [1-6]: ");
+
+            String input = scan.nextLine().trim();
+            try {
+                choice = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                choice = -1;
+            }
+
+            switch (choice) {
+                case 1 -> vendorAddProduct();
+                case 2 -> vendorArchiveProduct();
+                case 3 -> vendorSearchSales();
+                case 4 -> vendorUpdateProduct();
+                case 5 -> vendorChangeProductStatus();
+                case 6 -> {
+                    System.out.println("  Logging out of " + currentStoreName + ". Goodbye!");
                     currentVendID = null;
-                    System.out.println("Logged out.");
-                    return;
+                    currentStoreName = "";
                 }
-                default -> System.out.println("Invalid.");
+                default -> {
+                    System.out.println("Invalid choice. Press enter to continue.");
+                    scan.nextLine();
+                }
+            }
+        } while (choice != 6);
+    }
+
+    static boolean vendorLogin() {
+        printLine();
+        System.out.println("TOURISM MARKETPLACE SYSTEM - VENDOR PORTAL");
+        System.out.println("Vendor Login Screen");
+        printLine();
+        System.out.print("Enter Vendor Username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("Enter Password: ");
+        String password = scan.nextLine().trim();
+        printLine();
+
+        Vendor v = DataAccess.loginVendor(username, password);
+        if (v != null) {
+            currentVendID = v.getVendid();
+            currentStoreName = v.getVendestabname();
+            System.out.println("Authenticated successfully! Welcome, " + currentStoreName + ".");
+            System.out.print("Press enter to continue...");
+            scan.nextLine();
+            return true;
+        }
+
+        System.out.println("Invalid username or password.");
+        return false;
+    }
+
+    static void displayVendorProducts() {
+        System.out.println("Prod ID  | Product Name     | Category  | Price        | Status");
+        System.out.println();
+        boolean found = false;
+
+        for (Product p : DataAccess.getProductsByVendor(currentVendID)) {
+            if (!"Archived".equalsIgnoreCase(p.getProdstatus())) {
+                found = true;
+                System.out.printf("  %-8s | %-16s | %-9s | PHP %-8.2f | %s%n",
+                        p.getProdid(),
+                        p.getProdname(),
+                        p.getProdcategory(),
+                        (double) p.getProdprice(),
+                        p.getProdstatus());
             }
         }
+
+        if (!found) {
+            System.out.println("No products found.");
+        }
+    }
+
+    static void vendorAddProduct() {
+        clearScreen();
+        printLine();
+        System.out.println("ADD PRODUCT");
+        printLine();
+        System.out.print("Enter Product ID: ");
+        String productID = scan.nextLine().trim();
+        System.out.print("Enter Product Name: ");
+        String productName = scan.nextLine().trim();
+        System.out.print("Enter Product Description: ");
+        String description = scan.nextLine().trim();
+
+        int price = 0;
+        while (true) {
+            System.out.print("Enter Price: ");
+            try {
+                price = Integer.parseInt(scan.nextLine().trim());
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid price. Please enter a whole number.");
+            }
+        }
+
+        System.out.print("Enter Category: ");
+        String category = scan.nextLine().trim();
+        System.out.print("Enter Initial Status: ");
+        String status = scan.nextLine().trim();
+
+        printLine();
+        System.out.print("Save record to database? (Y/N): ");
+        String confirm = scan.nextLine().trim();
+
+        if (confirm.equalsIgnoreCase("Y")) {
+            // Matches your Product constructor: (id, vendid, name, desc, price, status, cat, img)
+            Product p = new Product(productID, currentVendID, productName, description, price, status, category, null);
+            if (DataAccess.addProduct(p)) {
+                System.out.println("  Product '" + productID + "' successfully added under " + currentStoreName + "!");
+            } else {
+                System.out.println("  Error adding product to database.");
+            }
+        } else {
+            System.out.println("Product addition canceled.");
+        }
+        System.out.print("Press enter to return...");
+        scan.nextLine();
+    }
+
+    static void vendorArchiveProduct() {
+        clearScreen();
+        printLine();
+        System.out.println("ARCHIVE PRODUCT");
+        printLine();
+        System.out.print("Enter Product ID to Archive: ");
+        String productID = scan.nextLine().trim();
+
+        Product old = DataAccess.getProductById(productID);
+        if (old == null || !old.getVendid().equals(currentVendID)) {
+            System.out.println("Product not found or does not belong to your store.");
+            System.out.print("Press enter to return...");
+            scan.nextLine();
+            return;
+        }
+
+        System.out.println("Current Product: " + old.getProdname() + " | Status: " + old.getProdstatus());
+        printLine();
+        System.out.print("Are you sure you want to archive this product? (Y/N): ");
+        String confirm = scan.nextLine().trim();
+
+        if (confirm.equalsIgnoreCase("Y")) {
+            Product archived = new Product(
+                    old.getProdid(), currentVendID, old.getProdname(), old.getProddesc(),
+                    old.getProdprice(), "Archived", old.getProdcategory(), old.getProdimg()
+            );
+            if (DataAccess.updateProduct(archived)) {
+                System.out.println("\nProduct " + productID + " status updated to 'Archived'.");
+                System.out.println("It will no longer appear in customer search results.");
+            } else {
+                System.out.println("Failed to archive product.");
+            }
+        } else {
+            System.out.println("Archival canceled.");
+        }
+        System.out.print("Press enter to return...");
+        scan.nextLine();
+    }
+
+    static void vendorSearchSales() {
+        clearScreen();
+        printLine();
+        System.out.println("STORE: " + currentStoreName + " | VENDOR ID: " + currentVendID);
+        System.out.println("Incoming Sales & Order Tracking & Search");
+        printLine();
+        System.out.println("Sales ID     | Date       | Product Name   | Qty  | Price        | Subtotal");
+        System.out.println();
+
+        String sql = "SELECT s.salesid, s.salesdate, p.prodname, sd.sdqty, sd.sdunitprice, (sd.sdqty * sd.sdunitprice) AS Subtotal " +
+                "FROM sales s " +
+                "JOIN salesdetails sd ON s.salesid = sd.salesid " +
+                "JOIN product p ON sd.prodid = p.prodid " +
+                "WHERE p.vendid = ?";
+
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/tourism_marketplace", "root", "");
+             java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, currentVendID);
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                boolean found = false;
+                while (rs.next()) {
+                    found = true;
+                    System.out.printf("%-12s | %-10s | %-14s | %-4d | PHP %-8.2f | PHP %.2f%n",
+                            rs.getString("salesid"),
+                            rs.getString("salesdate"),
+                            rs.getString("prodname"),
+                            rs.getInt("sdqty"),
+                            rs.getDouble("sdunitprice"),
+                            rs.getDouble("Subtotal"));
+                }
+                if (!found) {
+                    System.out.println("No sales records found.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("No sales records found or unable to fetch sales data.");
+        }
+
+        printLine();
+        System.out.println("SEARCH & FILTER OPTIONS:");
+        System.out.println("[1] Search by Sales ID");
+        System.out.println("[2] Search by Product ID");
+        System.out.println("[3] Filter by Date");
+        System.out.println("[4] Filter by Price");
+        System.out.println("[5] Refresh Full List");
+        System.out.println("[6] Return to Main Menu");
+        printLine();
+        System.out.print("Select option [1-6]: ");
+        scan.nextLine();
+        System.out.println("Returning to Main Menu...");
+    }
+
+    static void vendorUpdateProduct() {
+        clearScreen();
+        printLine();
+        System.out.println("UPDATE PRODUCT DETAILS");
+        printLine();
+        System.out.print("Enter Product ID to Update: ");
+        String productID = scan.nextLine().trim();
+
+        Product old = DataAccess.getProductById(productID);
+        if (old == null || !old.getVendid().equals(currentVendID)) {
+            System.out.println("Product not found or does not belong to your store.");
+            System.out.print("Press enter to return...");
+            scan.nextLine();
+            return;
+        }
+
+        System.out.println("Current Details: " + old.getProdname() + " | " + old.getProdcategory() + " | PHP " + old.getProdprice() + " | " + old.getProdstatus());
+        printLine();
+
+        System.out.print("Enter New Product Name (leave blank to keep current): ");
+        String newName = scan.nextLine().trim();
+        if (newName.isEmpty()) newName = old.getProdname();
+
+        System.out.print("Enter New Description (leave blank to keep current): ");
+        String newDesc = scan.nextLine().trim();
+        if (newDesc.isEmpty()) newDesc = old.getProddesc();
+
+        System.out.print("Enter New Price (leave blank to keep current): ");
+        String priceInput = scan.nextLine().trim();
+        int newPrice = priceInput.isEmpty() ? old.getProdprice() : Integer.parseInt(priceInput);
+
+        System.out.print("Enter New Category (leave blank to keep current): ");
+        String newCat = scan.nextLine().trim();
+        if (newCat.isEmpty()) newCat = old.getProdcategory();
+
+        printLine();
+        System.out.print("Save updated details? (Y/N): ");
+        String confirm = scan.nextLine().trim();
+
+        if (confirm.equalsIgnoreCase("Y")) {
+            Product updated = new Product(productID, currentVendID, newName, newDesc, newPrice, old.getProdstatus(), newCat, old.getProdimg());
+            if (DataAccess.updateProduct(updated)) {
+                System.out.println("Product '" + productID + "' details successfully updated!");
+            } else {
+                System.out.println("Error updating product.");
+            }
+        } else {
+            System.out.println("Update canceled.");
+        }
+        System.out.print("Press enter to return...");
+        scan.nextLine();
+    }
+
+    static void vendorChangeProductStatus() {
+        clearScreen();
+        printLine();
+        System.out.println("CHANGE PRODUCT STATUS");
+        printLine();
+        System.out.print("Enter Product ID to modify: ");
+        String productID = scan.nextLine().trim();
+
+        Product old = DataAccess.getProductById(productID);
+        if (old == null || !old.getVendid().equals(currentVendID)) {
+            System.out.println("Product not found or does not belong to your store.");
+            System.out.print("Press enter to return...");
+            scan.nextLine();
+            return;
+        }
+
+        System.out.println("Current Product: " + old.getProdname() + " | Current Status: " + old.getProdstatus());
+        printLine();
+        System.out.println("Select New Status:");
+        System.out.println("[1] Available");
+        System.out.println("[2] Pre-Order");
+        System.out.println("[3] Out-of-Stock");
+        printLine();
+        System.out.print("Enter choice [1-3]: ");
+        String statusChoice = scan.nextLine().trim();
+
+        String statusStr = switch (statusChoice) {
+            case "1" -> "Available";
+            case "2" -> "Pre-Order";
+            case "3" -> "Out-of-Stock";
+            default -> old.getProdstatus();
+        };
+
+        printLine();
+        System.out.print("Confirm status change? (Y/N): ");
+        String confirm = scan.nextLine().trim();
+
+        if (confirm.equalsIgnoreCase("Y")) {
+            Product updated = new Product(
+                    productID, currentVendID, old.getProdname(), old.getProddesc(),
+                    old.getProdprice(), statusStr, old.getProdcategory(), old.getProdimg()
+            );
+            if (DataAccess.updateProduct(updated)) {
+                System.out.println("Product " + productID + " status successfully updated to '" + statusStr + "'.");
+            } else {
+                System.out.println("Error updating status.");
+            }
+        } else {
+            System.out.println("Status change canceled.");
+        }
+        System.out.print("Press enter to return to Product Management...");
+        scan.nextLine();
+    }
+
+    static void printLine() {
+        System.out.println("=======================================================================================================================");
+    }
+
+    static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     // ==================== ADMIN ====================
