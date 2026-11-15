@@ -433,7 +433,7 @@ public class DataAccess {
 
     public static boolean deleteVendor(String tourid) {
         try (Connection con = DataMgr.getCon();
-             PreparedStatement ps = con.prepareStatement("DELETE FROM vendor WHERE tourid=?")) {
+             PreparedStatement ps = con.prepareStatement("DELETE FROM vendor WHERE vendid=?")) {
             ps.setString(1, tourid);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
