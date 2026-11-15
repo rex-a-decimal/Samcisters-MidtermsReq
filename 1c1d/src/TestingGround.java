@@ -378,7 +378,6 @@ public class TestingGround {
         String confirm = scan.nextLine().trim();
 
         if (confirm.equalsIgnoreCase("Y")) {
-            // Matches your Product constructor: (id, vendid, name, desc, price, status, cat, img)
             Product p = new Product(productID, currentVendID, productName, description, price, status, category, null);
             if (DataAccess.addProduct(p)) {
                 System.out.println("  Product '" + productID + "' successfully added under " + currentStoreName + "!");
