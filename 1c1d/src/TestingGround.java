@@ -179,15 +179,54 @@ public class TestingGround {
             System.out.println("Please log in first.");
             return;
         }
-        ArrayList<Voucher> list = DataAccess.getVouchers();
-        for (Voucher v : list) {
-            System.out.println(v.getVoucherid() + " | " + v.getVoucherdesc() + " | pts: " + v.getVoucherpointsreq());
+
+        int points = DataAccess.getTouristPoints(currentTourID);
+        ArrayList<Voucher> vouchers = DataAccess.getVouchers();
+        ArrayList<Voucher> available = new ArrayList<>();
+
+        System.out.println("\n========== AVAILABLE VOUCHERS ==========");
+        System.out.println("Your earned points: " + points);
+        System.out.println("----------------------------------------");
+
+        // Show only vouchers the tourist has enough earned points to claim.
+        for (Voucher v : vouchers) {
+            if (points >= v.getVoucherpointsreq()) {
+                available.add(v);
+                System.out.println(v.getVoucherdesc() +
+                        " | pts: " + v.getVoucherpointsreq());
+            }
         }
-        System.out.print("Voucher ID to claim (0 to cancel): ");
-        String vid = scan.nextLine();
-        if (vid.equals("0")) return;
-        if (DataAccess.claimVoucher(currentTourID, vid)) {
+
+        if (available.isEmpty()) {
+            System.out.println("No vouchers available yet.");
+            System.out.println("Earn points from completed purchases to unlock vouchers.");
+            return;
+        }
+
+        System.out.println("----------------------------------------");
+        System.out.print("Enter voucher name to claim (0 to cancel): ");
+        String voucherName = scan.nextLine().trim();
+        if (voucherName.equals("0")) return;
+
+        Voucher selected = null;
+        for (Voucher v : available) {
+            if (v.getVoucherdesc().equalsIgnoreCase(voucherName)) {
+                selected = v;
+                break;
+            }
+        }
+
+        if (selected == null) {
+            System.out.println("Voucher name not found or you do not have enough points.");
+            return;
+        }
+
+        // Use the ID internally; the tourist only sees and enters the voucher name.
+        if (DataAccess.claimVoucher(currentTourID, selected.getVoucherid())) {
             System.out.println("Voucher claimed!");
+            System.out.println("Claimed: " + selected.getVoucherdesc());
+        } else {
+            System.out.println("Voucher could not be claimed.");
         }
     }
 

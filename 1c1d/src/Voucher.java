@@ -7,9 +7,11 @@ public class Voucher {
     private String vouchervalidfrom;
     private String vouchervalidto;
 
-    public Voucher(){}
+    public Voucher() {}
 
-    public Voucher(String voucherid, String voucherdesc, double voucherdiscount, int vouchervalue, int voucherpointsreq, String vouchervalidfrom, String vouchervalidto) {
+    public Voucher(String voucherid, String voucherdesc, double voucherdiscount,
+                   int vouchervalue, int voucherpointsreq,
+                   String vouchervalidfrom, String vouchervalidto) {
         this.voucherid = voucherid;
         this.voucherdesc = voucherdesc;
         this.voucherdiscount = voucherdiscount;
@@ -19,59 +21,18 @@ public class Voucher {
         this.vouchervalidto = vouchervalidto;
     }
 
-    public String getVoucherid() {
-        return voucherid;
-    }
-
-    public void setVoucherid(String voucherid) {
-        this.voucherid = voucherid;
-    }
-
-    public String getVoucherdesc() {
-        return voucherdesc;
-    }
-
-    public void setVoucherdesc(String voucherdesc) {
-        this.voucherdesc = voucherdesc;
-    }
-
-    public double getVoucherdiscount() {
-        return voucherdiscount;
-    }
-
-    public void setVoucherdiscount(double voucherdiscount) {
-        this.voucherdiscount = voucherdiscount;
-    }
-
-    public int getVouchervalue() {
-        return vouchervalue;
-    }
-
-    public void setVouchervalue(int vouchervalue) {
-        this.vouchervalue = vouchervalue;
-    }
-
-    public int getVoucherpointsreq() {
-        return voucherpointsreq;
-    }
-
-    public void setVoucherpointsreq(int voucherpointsreq) {
-        this.voucherpointsreq = voucherpointsreq;
-    }
-
-    public String getVouchervalidfrom() {
-        return vouchervalidfrom;
-    }
-
-    public void setVouchervalidfrom(String vouchervalidfrom) {
-        this.vouchervalidfrom = vouchervalidfrom;
-    }
-
-    public String getVouchervalidto() {
-        return vouchervalidto;
-    }
-
-    public void setVouchervalidto(String vouchervalidto) {
-        this.vouchervalidto = vouchervalidto;
-    }
+    public String getVoucherid() { return voucherid; }
+    public void setVoucherid(String voucherid) { this.voucherid = voucherid; }
+    public String getVoucherdesc() { return voucherdesc; }
+    public void setVoucherdesc(String voucherdesc) { this.voucherdesc = voucherdesc; }
+    public double getVoucherdiscount() { return voucherdiscount; }
+    public void setVoucherdiscount(double voucherdiscount) { this.voucherdiscount = voucherdiscount; }
+    public int getVouchervalue() { return vouchervalue; }
+    public void setVouchervalue(int vouchervalue) { this.vouchervalue = vouchervalue; }
+    public int getVoucherpointsreq() { return voucherpointsreq; }
+    public void setVoucherpointsreq(int voucherpointsreq) { this.voucherpointsreq = voucherpointsreq; }
+    public String getVouchervalidfrom() { return vouchervalidfrom; }
+    public void setVouchervalidfrom(String vouchervalidfrom) { this.vouchervalidfrom = vouchervalidfrom; }
+    public String getVouchervalidto() { return vouchervalidto; }
+    public void setVouchervalidto(String vouchervalidto) { this.vouchervalidto = vouchervalidto; }
 }

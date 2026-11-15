@@ -203,24 +203,97 @@ public class DataAccess {
         return list;
     }
 
+    // Total points earned from completed sales only.
+    public static int getTouristPoints(String tourid) {
+        String q = "SELECT COALESCE(SUM(salespointsearned), 0) " +
+                "FROM sales WHERE tourid = ? AND LOWER(salesstatus) = 'completed'";
+        try (Connection con = DataMgr.getCon();
+             PreparedStatement ps = con.prepareStatement(q)) {
+            ps.setString(1, tourid);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting tourist points: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // The voucher ID remains internal to the database. Points are checked again
+    // here so a direct/old call cannot bypass the points requirement.
     public static boolean claimVoucher(String tourid, String vid) {
-        try (Connection con = DataMgr.getCon()) {
-            PreparedStatement check = con.prepareStatement("SELECT * FROM touristvoucher WHERE tourid=? AND voucherid=?");
-            check.setString(1, tourid);
-            check.setString(2, vid);
-            if (check.executeQuery().next()) {
-                System.out.println("Already claimed.");
+        Connection con = null;
+        boolean oldAutoCommit = true;
+        try {
+            con = DataMgr.getCon();
+            oldAutoCommit = con.getAutoCommit();
+            con.setAutoCommit(false);
+
+            int requiredPoints;
+            String voucherSQL = "SELECT voucherpointsreq FROM voucher WHERE voucherid = ?";
+            try (PreparedStatement ps = con.prepareStatement(voucherSQL)) {
+                ps.setString(1, vid);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        System.out.println("Voucher not found.");
+                        con.rollback();
+                        return false;
+                    }
+                    requiredPoints = rs.getInt("voucherpointsreq");
+                }
+            }
+
+            int earnedPoints;
+            String pointsSQL = "SELECT COALESCE(SUM(salespointsearned), 0) " +
+                    "FROM sales WHERE tourid = ? AND LOWER(salesstatus) = 'completed'";
+            try (PreparedStatement ps = con.prepareStatement(pointsSQL)) {
+                ps.setString(1, tourid);
+                try (ResultSet rs = ps.executeQuery()) {
+                    rs.next();
+                    earnedPoints = rs.getInt(1);
+                }
+            }
+
+            if (earnedPoints < requiredPoints) {
+                System.out.println("Not enough points. You have " + earnedPoints +
+                        " points; this voucher requires " + requiredPoints + ".");
+                con.rollback();
                 return false;
             }
 
-            PreparedStatement ps = con.prepareStatement("INSERT INTO touristvoucher VALUES (?, ?, NULL, 'active')");
-            ps.setString(1, tourid);
-            ps.setString(2, vid);
-            ps.executeUpdate();
+            String checkSQL = "SELECT 1 FROM touristvoucher WHERE tourid = ? AND voucherid = ?";
+            try (PreparedStatement ps = con.prepareStatement(checkSQL)) {
+                ps.setString(1, tourid);
+                ps.setString(2, vid);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        System.out.println("You have already claimed this voucher.");
+                        con.rollback();
+                        return false;
+                    }
+                }
+            }
+
+            String insertSQL = "INSERT INTO touristvoucher (tourid, voucherid, tvdateredeemed, tvstatus) " +
+                    "VALUES (?, ?, NULL, 'active')";
+            try (PreparedStatement ps = con.prepareStatement(insertSQL)) {
+                ps.setString(1, tourid);
+                ps.setString(2, vid);
+                ps.executeUpdate();
+            }
+
+            con.commit();
             return true;
         } catch (SQLException e) {
-            System.out.println("Claim failed.");
+            if (con != null) {
+                try { con.rollback(); } catch (SQLException ignored) { }
+            }
+            System.out.println("Claim failed: " + e.getMessage());
             return false;
+        } finally {
+            if (con != null) {
+                try { con.setAutoCommit(oldAutoCommit); } catch (SQLException ignored) { }
+            }
         }
     }
 
