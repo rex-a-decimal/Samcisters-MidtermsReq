@@ -1,23 +1,23 @@
 public class TouristVoucher {
-    private int tourid;
+    private String tourid;
     private String voucherid;
     private String tvdateredeemed;
     private String tvstatus;
 
     public TouristVoucher() {}
 
-    public TouristVoucher(int tourid, String voucherid, String tvdateredeemed, String tvstatus) {
+    public TouristVoucher(String tourid, String voucherid, String tvdateredeemed, String tvstatus) {
         this.tourid = tourid;
         this.voucherid = voucherid;
         this.tvdateredeemed = tvdateredeemed;
         this.tvstatus = tvstatus;
     }
 
-    public int getTourid() {
+    public String getTourid() {
         return tourid;
     }
 
-    public void setTourid(int tourid) {
+    public void setTourid(String tourid) {
         this.tourid = tourid;
     }
 

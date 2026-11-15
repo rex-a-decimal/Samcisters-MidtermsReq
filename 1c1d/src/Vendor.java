@@ -5,16 +5,22 @@ public class Vendor {
     private String vendaddress;
     private int vendcpnum;
     private String vendemail;
+    private String vendstatus;
+    private String vendpass;
+    private String venduser;
 
     public Vendor(){}
 
-    public Vendor(String vendid, String vendestabname, String vendownername, String vendaddress, int vendcpnum, String vendemail) {
+    public Vendor(String vendid, String vendestabname, String vendownername, String vendaddress, int vendcpnum, String vendemail, String vendstatus, String vendpass, String venduser) {
         this.vendid = vendid;
         this.vendestabname = vendestabname;
         this.vendownername = vendownername;
         this.vendaddress = vendaddress;
         this.vendcpnum = vendcpnum;
         this.vendemail = vendemail;
+        this.vendstatus = vendstatus;
+        this.vendpass = vendpass;
+        this.venduser = venduser;
     }
 
     public String getVendid() {
@@ -63,5 +69,29 @@ public class Vendor {
 
     public void setVendemail(String vendemail) {
         this.vendemail = vendemail;
+    }
+
+    public String getVendstatus() {
+        return vendstatus;
+    }
+
+    public void setVendstatus(String vendstatus) {
+        this.vendstatus = vendstatus;
+    }
+
+    public String getVendpass() {
+        return vendpass;
+    }
+
+    public void setVendpass(String vendpass) {
+        this.vendpass = vendpass;
+    }
+
+    public String getVenduser() {
+        return venduser;
+    }
+
+    public void setVenduser(String venduser) {
+        this.venduser = venduser;
     }
 }

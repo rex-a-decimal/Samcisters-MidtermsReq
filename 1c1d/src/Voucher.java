@@ -1,7 +1,7 @@
 public class Voucher {
-    private int voucherid;
+    private String voucherid;
     private String voucherdesc;
-    private int voucherdiscount;
+    private double voucherdiscount;
     private int vouchervalue;
     private int voucherpointsreq;
     private String vouchervalidfrom;
@@ -9,7 +9,7 @@ public class Voucher {
 
     public Voucher(){}
 
-    public Voucher(int voucherid, String voucherdesc, int voucherdiscount, int vouchervalue, int voucherpointsreq, String vouchervalidfrom, String vouchervalidto) {
+    public Voucher(String voucherid, String voucherdesc, double voucherdiscount, int vouchervalue, int voucherpointsreq, String vouchervalidfrom, String vouchervalidto) {
         this.voucherid = voucherid;
         this.voucherdesc = voucherdesc;
         this.voucherdiscount = voucherdiscount;
@@ -19,11 +19,11 @@ public class Voucher {
         this.vouchervalidto = vouchervalidto;
     }
 
-    public int getVoucherid() {
+    public String getVoucherid() {
         return voucherid;
     }
 
-    public void setVoucherid(int voucherid) {
+    public void setVoucherid(String voucherid) {
         this.voucherid = voucherid;
     }
 
@@ -35,11 +35,11 @@ public class Voucher {
         this.voucherdesc = voucherdesc;
     }
 
-    public int getVoucherdiscount() {
+    public double getVoucherdiscount() {
         return voucherdiscount;
     }
 
-    public void setVoucherdiscount(int voucherdiscount) {
+    public void setVoucherdiscount(double voucherdiscount) {
         this.voucherdiscount = voucherdiscount;
     }
 
