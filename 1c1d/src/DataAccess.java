@@ -171,6 +171,54 @@ public class DataAccess {
         }
     }
 
+    public static boolean archiveProduct(String id, String vendid) {
+        String q = "UPDATE product SET prodstatus='Archived' WHERE prodid=? AND vendid=?";
+        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement(q)) {
+            ps.setString(1, id);
+            ps.setString(2, vendid);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Archive failed.");
+            return false;
+        }
+    }
+
+    public static boolean changeStatus(String id, String status, String vendid) {
+        String q = "UPDATE product SET prodstatus=? WHERE prodid=? AND vendid=?";
+        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement(q)) {
+            ps.setString(1, status);
+            ps.setString(2, id);
+            ps.setString(3, vendid);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Status update failed.");
+            return false;
+        }
+    }
+
+    public static void searchSales(String vendid) {
+        String q = "SELECT s.salesid, s.salesdate, p.prodname, sd.sdqty, sd.sdunitprice, (sd.sdqty * sd.sdunitprice) AS Subtotal " +
+                "FROM sales s JOIN salesdetails sd ON s.salesid = sd.salesid " +
+                "JOIN product p ON sd.prodid = p.prodid WHERE p.vendid = ?";
+        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement(q)) {
+            ps.setString(1, vendid);
+            try (ResultSet rs = ps.executeQuery()) {
+                boolean found = false;
+                System.out.println("Sales ID | Date | Product | Qty | Price | Subtotal");
+                while (rs.next()) {
+                    found = true;
+                    System.out.printf("%-10s | %-10s | %-15s | %-3d | P%-6.2f | P%.2f\n",
+                            rs.getString("salesid"), rs.getString("salesdate"),
+                            rs.getString("prodname"), rs.getInt("sdqty"),
+                            rs.getDouble("sdunitprice"), rs.getDouble("Subtotal"));
+                }
+                if (!found) System.out.println("No sales found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Search failed.");
+        }
+    }
+
     public static ArrayList<Voucher> getVouchers() {
         ArrayList<Voucher> list = new ArrayList<>();
         try (Connection con = DataMgr.getCon(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery("SELECT * FROM voucher")) {
@@ -329,7 +377,7 @@ public class DataAccess {
         }
     }
     public static boolean deleteVendor(String tourid) {
-        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement("DELETE FROM vendor WHERE tourid=?")) {
+        try (Connection con = DataMgr.getCon(); PreparedStatement ps = con.prepareStatement("DELETE FROM vendor WHERE vendid=?")) {
             ps.setString(1, tourid);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

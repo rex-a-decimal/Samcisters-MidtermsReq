@@ -212,7 +212,8 @@ public class TestingGround {
             System.out.println("[3] Add Product");
             System.out.println("[4] Update Product");
             System.out.println("[5] Delete Product");
-            System.out.println("[6] Log Out");
+            System.out.println("[6] Archive Product");
+            System.out.println("[7] Log Out");
             System.out.print("Select: ");
             String ch = scan.nextLine();
 
@@ -250,18 +251,25 @@ public class TestingGround {
                     String status = scan.nextLine();
                     System.out.print("Category: ");
                     String cat = scan.nextLine();
-                    Product p = new Product(id, currentVendID, name, desc, price, status, cat, null);
-                    if (DataAccess.addProduct(p)) System.out.println("Product added!");
+
+                    System.out.print("Save record to database? (Y/N): ");
+                    String confirm = scan.nextLine();
+                    if (confirm.equalsIgnoreCase("Y")) {
+                        Product p = new Product(id, currentVendID, name, desc, price, status, cat, null);
+                        if (DataAccess.addProduct(p)) System.out.println("Product added!");
+                    } else {
+                        System.out.println("Product addition canceled.");
+                    }
                 }
                 case "4" -> {
                     if (currentVendID == null) { System.out.println("Login first."); break; }
                     System.out.print("Product ID: ");
                     String id = scan.nextLine();
                     Product old = DataAccess.getProductById(id);
-                    if (old == null || !old.getVendid().equals(currentVendID)) {
-                        System.out.println("Not found or not yours.");
-                        break;
-                    }
+                        if (old == null || !old.getVendid().equals(currentVendID)) {
+                            System.out.println("Not found or not yours.");
+                            break;
+                        }
                     System.out.print("New name: ");
                     String name = scan.nextLine();
                     if (name.isEmpty()) name = old.getProdname();
@@ -283,9 +291,31 @@ public class TestingGround {
                         System.out.println("Not found or not yours.");
                         break;
                     }
-                    if (DataAccess.deleteProduct(id)) System.out.println("Deleted.");
+                    System.out.print("Are you sure you want to PERMANENTLY DELETE this product? (Y/N): ");
+                    String confirm = scan.nextLine();
+                    if (confirm.equalsIgnoreCase("Y")) {
+                        if (DataAccess.deleteProduct(id)) System.out.println("Deleted.");
+                    } else {
+                        System.out.println("Deletion canceled.");
+                    }
                 }
                 case "6" -> {
+                    if (currentVendID == null) { System.out.println("Login first."); break; }
+                    System.out.print("Product ID to archive: ");
+                    String id = scan.nextLine();
+                    System.out.print("Are you sure you want to archive this product? (Y/N): ");
+                    String confirm = scan.nextLine();
+                    if (confirm.equalsIgnoreCase("Y")) {
+                        if (DataAccess.archiveProduct(id, currentVendID)) {
+                            System.out.println("Archived successfully.");
+                        } else {
+                            System.out.println("Failed to archive.");
+                        }
+                    } else {
+                        System.out.println("Archival canceled.");
+                    }
+                }
+                case "7" -> {
                     currentVendID = null;
                     System.out.println("Logged out.");
                     return;
