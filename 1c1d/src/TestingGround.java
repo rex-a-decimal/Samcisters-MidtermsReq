@@ -304,7 +304,8 @@ public class TestingGround {
             System.out.println("[3] View All Vendors");
             System.out.println("[4] Update Vendor Status");
             System.out.println("[5] View All Products");
-            System.out.println("[6] Log Out");
+            System.out.println("[6] Delete Tourist or Vendor Account");
+            System.out.println("[7] Log Out");
             System.out.print("Select: ");
             String ch = scan.nextLine();
 
@@ -349,6 +350,35 @@ public class TestingGround {
                     }
                 }
                 case "6" -> {
+                    if (currentAdmin == null) { System.out.println("Login first."); break; }
+                    System.out.println("[1] Delete Tourist");
+                    System.out.println("[2] Delete Vendor");
+                    System.out.print("Select: ");
+                    String type = scan.nextLine();
+
+                    switch (type) {
+                        case "1" -> {
+                            System.out.print("Enter Tourist ID to delete: ");
+                            String tid = scan.nextLine();
+                            if (DataAccess.deleteTourist(tid)) {
+                                System.out.println("Tourist account deleted successfully.");
+                            } else {
+                                System.out.println("Failed to delete tourist.");
+                            }
+
+                        }
+                        case "2" -> {
+                            System.out.print("Enter Vendor ID to delete: ");
+                            String vid = scan.nextLine();
+                            if (DataAccess.deleteVendor(vid)) {
+                                System.out.println("Vendor deleted successfully.");
+                            } else {
+                                System.out.println("Failed to delete vendor.");
+                            }
+                        }
+                    }
+                }
+                case "7" -> {
                     currentAdmin = null;
                     System.out.println("Logged out.");
                     return;
