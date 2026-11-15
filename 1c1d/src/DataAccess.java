@@ -224,6 +224,13 @@ public class DataAccess {
 
     public static boolean createOrder(String payid, double amt, String mode, String salesid, String tourid,
                                       String pdate, String ptime, String pplace, ArrayList<String[]> items) {
+
+        ArrayList<Product> products = new ArrayList<>();
+        for (String[] item : items) {
+            Product prod = getProductById(item[0]);
+            if (prod != null) products.add(prod);
+        }
+
         try (Connection con = DataMgr.getCon()) {
             // payment
             PreparedStatement p1 = con.prepareStatement("INSERT INTO payment VALUES (?,?,?,?,NULL)");
@@ -234,8 +241,7 @@ public class DataAccess {
             p1.executeUpdate();
 
             // sales
-            PreparedStatement p2 = con.prepareStatement(
-                "INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement p2 = con.prepareStatement("INSERT INTO sales VALUES (?,?,?,?,?,?,?,?,?,?,?)");
             p2.setString(1, salesid);
             p2.setString(2, tourid);
             p2.setString(3, payid);
@@ -250,10 +256,15 @@ public class DataAccess {
             p2.executeUpdate();
 
             // salesdetails
-            for (String[] item : items) {
-                Product prod = getProductById(item[0]);
-                if (prod == null) continue;
-                int qty = Integer.parseInt(item[1]);
+            for (Product prod : products) {
+                int qty = 0;
+                for (String[] item : items) {
+                    if (item[0].equals(prod.getProdid())) {
+                        qty = Integer.parseInt(item[1]);
+                        break;
+                    }
+                }
+
                 PreparedStatement p3 = con.prepareStatement("INSERT INTO salesdetails VALUES (?,?,?,?,?,?)");
                 p3.setString(1, salesid);
                 p3.setString(2, prod.getProdid());
