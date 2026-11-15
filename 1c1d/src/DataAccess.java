@@ -297,6 +297,31 @@ public class DataAccess {
         }
     }
 
+    public static void searchSales(String vendid) {
+        String q = "SELECT s.salesid, s.salesdate, p.prodname, sd.sdqty, sd.sdunitprice, (sd.sdqty * sd.sdunitprice) AS Subtotal " +
+                "FROM sales s JOIN salesdetails sd ON s.salesid = sd.salesid " +
+                "JOIN product p ON sd.prodid = p.prodid WHERE p.vendid = ?";
+        try (Connection con = DataMgr.getCon();
+             PreparedStatement ps = con.prepareStatement(q)) {
+            ps.setString(1, vendid);
+            try (ResultSet rs = ps.executeQuery()) {
+                boolean found = false;
+                while (rs.next()) {
+                    found = true;
+                    System.out.printf("%-12s | %-10s | %-14s | %-4d | PHP %-8.2f | PHP %.2f%n",
+                            rs.getString("salesid"), rs.getString("salesdate"),
+                            rs.getString("prodname"), rs.getInt("sdqty"),
+                            rs.getDouble("sdunitprice"), rs.getDouble("Subtotal"));
+                }
+                if (!found) {
+                    System.out.println("No sales records found.");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching sales: " + e.getMessage());
+        }
+    }
+
     public static ArrayList<Sales> getSalesByTourist(String tourid) {
         ArrayList<Sales> list = new ArrayList<>();
         String q = "SELECT * FROM sales WHERE tourid = ?";

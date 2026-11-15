@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class TestingGround {
+public class MainMenu {
     static Scanner scan = new Scanner(System.in);
     static String currentTourID = null;
     static String currentTourName = null;
@@ -300,7 +300,7 @@ public class TestingGround {
 
     static boolean vendorLogin() {
         printLine();
-        System.out.println("TOURISM MARKETPLACE SYSTEM - VENDOR PORTAL");
+        System.out.println("C.A.R RESERVATION SYSTEM - VENDOR PORTAL");
         System.out.println("Vendor Login Screen");
         printLine();
         System.out.print("Enter Vendor Username: ");
@@ -439,34 +439,8 @@ public class TestingGround {
         System.out.println("Sales ID     | Date       | Product Name   | Qty  | Price        | Subtotal");
         System.out.println();
 
-        String sql = "SELECT s.salesid, s.salesdate, p.prodname, sd.sdqty, sd.sdunitprice, (sd.sdqty * sd.sdunitprice) AS Subtotal " +
-                "FROM sales s " +
-                "JOIN salesdetails sd ON s.salesid = sd.salesid " +
-                "JOIN product p ON sd.prodid = p.prodid " +
-                "WHERE p.vendid = ?";
-
-        try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/tourism_marketplace", "root", "");
-             java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, currentVendID);
-            try (java.sql.ResultSet rs = ps.executeQuery()) {
-                boolean found = false;
-                while (rs.next()) {
-                    found = true;
-                    System.out.printf("%-12s | %-10s | %-14s | %-4d | PHP %-8.2f | PHP %.2f%n",
-                            rs.getString("salesid"),
-                            rs.getString("salesdate"),
-                            rs.getString("prodname"),
-                            rs.getInt("sdqty"),
-                            rs.getDouble("sdunitprice"),
-                            rs.getDouble("Subtotal"));
-                }
-                if (!found) {
-                    System.out.println("No sales records found.");
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("No sales records found or unable to fetch sales data.");
-        }
+        // The DAO prints the table rows directly
+        DataAccess.searchSales(currentVendID);
 
         printLine();
         System.out.println("SEARCH & FILTER OPTIONS:");
